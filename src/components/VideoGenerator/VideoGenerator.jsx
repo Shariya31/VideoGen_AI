@@ -3,30 +3,44 @@ import Topic from "./components/Topic";
 import VideoStyle from "./components/VideoStyle";
 import Voice from "./components/Voice";
 import Preview from "./components/Preview";
+import axios from 'axios'
 
 function VideoGenerator() {
   const [formData, setFormData] = useState({});
 
-  const onHandleInputChange = (fieldName,fieldValue)=>{ 
+  const onHandleInputChange = (fieldName, fieldValue) => {
     setFormData(prev => ({
       ...prev,
-      [fieldName]:fieldValue
+      [fieldName]: fieldValue
     }))
     console.log(formData)
   }
+
+  const handleGenerateVideo = async () => {
+    if (!formData.script || !formData.title || !formData.topic || !formData.videoStyle || !formData.videoVoice){
+      console.log('Error', 'Enter all fields')
+      return
+    }
+
+    const result = await axios.post('http://localhost:3000/api/generate-video', {
+      ...formData
+    })
+    console.log(result)
+  }
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">Create New Video</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
         <div className="col-span-2 border-1 rounded-xl h-[77vh] overflow-auto px-7">
-          <Topic onHandleInputChange={onHandleInputChange}/>
-          <VideoStyle onHandleInputChange={onHandleInputChange}/>
-          <Voice onHandleInputChange={onHandleInputChange}/>
+          <Topic onHandleInputChange={onHandleInputChange} />
+          <VideoStyle onHandleInputChange={onHandleInputChange} />
+          <Voice onHandleInputChange={onHandleInputChange} />
           <button className="bg-black cursor-pointer 
-        text-white px-4 py-2 rounded mt-4">Generate Video</button>
+        text-white px-4 py-2 rounded mt-4" onClick={handleGenerateVideo}>Generate Video</button>
         </div>
         <div className="col-span-1">
-          <Preview formData={formData}/>
+          <Preview formData={formData} />
         </div>
       </div>
     </div>

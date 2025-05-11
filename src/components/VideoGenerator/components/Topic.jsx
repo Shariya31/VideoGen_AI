@@ -93,7 +93,9 @@ const Topic = ({onHandleInputChange}) => {
             key={index}
             className={`w-[20rem] h-[7rem] p-2 cursor-pointer border-1 line-clamp-4 hover:bg-gray-100 rounded 
               ${selectedIdeaIndex === index && 'border-red-500'}`}
-            onClick={() => {handleIdeaClick(idea); setSelectedIdeaIndex(index)}}
+            onClick={() => {handleIdeaClick(idea); setSelectedIdeaIndex(index);
+              onHandleInputChange('script',idea)
+            }}
           >
             {idea}
           </li>
