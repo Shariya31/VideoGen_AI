@@ -20,13 +20,13 @@ const Sidebar = () => {
       {/* Toggle Button (always visible) */}
       <button
         onClick={toggleSidebar}
-        className="p-2 fixed top-4 left-4 bg-gray-800 text-white z-[100] md:hidden"
+        className="p-2 fixed top-4 left-4 bg-gray-800 text-white z-[100] lg:hidden"
       >
         {isOpen ? "❌" : "☰"}
       </button>
 
       {/* Sidebar for desktop */}
-      <div className="hidden md:block">
+      <div className="hidden md:hidden lg:block">
         <motion.div
           initial={{ x: 0 }}
           animate={{ x: 0 }}

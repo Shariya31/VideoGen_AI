@@ -7,7 +7,7 @@ export async function generateVideoIdeas(promptText) {
       },
       body: JSON.stringify({
         model: "command",
-        prompt: `Give me 3 viral short video ideas based on: ${promptText}`,
+        prompt: `Give me 2 viral short video ideas based on: ${promptText} Do not write any suggestion or follow up messages just plain text`,
         max_tokens: 100,
         temperature: 0.9,
       }),

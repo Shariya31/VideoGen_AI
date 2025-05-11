@@ -9,16 +9,22 @@ import Sidebar from '../components/sideBar/Sidebar'
 import CreateNewVideo from '../pages/CreateNewVideo'
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
-    <Sidebar/>
-        <Routes>
-            <Route path='/' element={<Home/>}/>
-            <Route path='/auth' element={<GoogleAuth/>}/>
-            <Route path='/dashboard' element={<ProtectedRoutes><Dashboard/></ProtectedRoutes>}/>
-            <Route path='/new-video' element={<ProtectedRoutes><CreateNewVideo/></ProtectedRoutes>}/>
-            <Route path='*' element={<GoogleAuth/>}/>
-        </Routes>
-    </BrowserRouter>
+    <div className='grid grid-cols-1 md:grid-cols-5 lg:grid-cols-5'>
+      <BrowserRouter>
+        <div className='col-span-1'>
+          <Sidebar />
+        </div>
+        <div className='col-span-4 p-12'>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/auth' element={<GoogleAuth />} />
+            <Route path='/dashboard' element={<ProtectedRoutes><Dashboard /></ProtectedRoutes>} />
+            <Route path='/new-video' element={<ProtectedRoutes><CreateNewVideo /></ProtectedRoutes>} />
+            <Route path='*' element={<GoogleAuth />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </div>
   )
 }
 

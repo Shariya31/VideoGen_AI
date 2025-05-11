@@ -1,5 +1,5 @@
 import React from 'react'
-import VideoGenerator from '../components/VideoGenerator'
+import VideoGenerator from '../components/VideoGenerator/VideoGenerator'
 
 const CreateNewVideo = () => {
   return (
