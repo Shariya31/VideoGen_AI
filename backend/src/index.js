@@ -8,12 +8,16 @@ import { inngest, functions } from './ingest/index.js';
 //import routes
 
 import videoRoutes from './routes/generateVideoRoute.js'
+import connectDB from './config/db.js';
 
 dotenv.config();
 const app = express();
 
 app.use(express.json())
 app.use(cors());
+
+const mongoUrl = process.env.MONGO_URI || ""
+connectDB(mongoUrl)
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
