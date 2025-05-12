@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { generateVideoIdeas, generateVideoOutline } from '../../../services/cohereAI';
+// import { generateVideoOutline } from '../../../services/cohereAI';
 import Tabs from '../../../components/Tabs/Tabs.jsx';
+import {generateVideoIdeas} from '../../../services/geminiAI.js'
 
 const tabsData = [
     {
@@ -21,32 +22,33 @@ const Topic = ({onHandleInputChange}) => {
     setLoading(true);
     setError("");
     setOutline("");
+    setIdeas([])
     try {
       const response = await generateVideoIdeas(topic);
-      setIdeas(response.split("\n").filter((line) => line.trim() !== ""));
-      console.log(response)
+      let {scripts} = JSON.parse(response)
+      setIdeas(scripts);
     } catch (err) {
       setError("Failed to fetch ideas.");
-      console.log(err.message)
+      console.log(err)
     }
     setLoading(false);
   };
 
-  const handleIdeaClick = async (idea) => {
-    setLoading(true);
-    setError('')
-    setSelectedIdeaIndex(null)
-    setOutline("");
-    try {
-      const outlineText = await generateVideoOutline(idea);
-      setOutline(outlineText);
-    } catch (err) {
-      setError("Failed to generate outline.");
-      console.log(err.message)
-    } finally{
-      setLoading(false);
-    }
-  };
+  // const handleIdeaClick = async (idea) => {
+  //   setLoading(true);
+  //   setError('')
+  //   setSelectedIdeaIndex(null)
+  //   setOutline("");
+  //   try {
+  //     const outlineText = await generateVideoOutline(idea);
+  //     setOutline(outlineText);
+  //   } catch (err) {
+  //     setError("Failed to generate outline.");
+  //     console.log(err.message)
+  //   } finally{
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="w-[45rem] p-6 max-w-full">
@@ -76,7 +78,7 @@ const Topic = ({onHandleInputChange}) => {
         className="border p-2 w-full mb-4"
       />
   
-     {ideas?.length<=0 && <button
+     {<button
         onClick={handleGenerateIdeas}
         disabled={loading? true: false}
         className={`${loading ? 'bg-gray-800': 'bg-black cursor-pointer'} 
@@ -93,11 +95,11 @@ const Topic = ({onHandleInputChange}) => {
             key={index}
             className={`w-[20rem] h-[7rem] p-2 cursor-pointer border-1 line-clamp-4 hover:bg-gray-100 rounded 
               ${selectedIdeaIndex === index && 'border-red-500'}`}
-            onClick={() => {handleIdeaClick(idea); setSelectedIdeaIndex(index);
+            onClick={() => {setSelectedIdeaIndex(index);
               onHandleInputChange('script',idea)
             }}
           >
-            {idea}
+            {idea.content}
           </li>
         ))}
       </ul>

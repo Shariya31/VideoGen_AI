@@ -7,6 +7,8 @@ import axios from 'axios'
 
 function VideoGenerator() {
   const [formData, setFormData] = useState({});
+  const [loading, setLoading] = useState(false);
+  const[error, setError] = useState('')
 
   const onHandleInputChange = (fieldName, fieldValue) => {
     setFormData(prev => ({
@@ -17,15 +19,24 @@ function VideoGenerator() {
   }
 
   const handleGenerateVideo = async () => {
-    if (!formData.script || !formData.title || !formData.topic || !formData.videoStyle || !formData.videoVoice){
-      console.log('Error', 'Enter all fields')
-      return
-    }
+    // if (!formData.script || !formData.title || !formData.topic || !formData.videoStyle || !formData.videoVoice) {
+    //   console.log('Error', 'Enter all fields')
+    //   return
+    // }
 
-    const result = await axios.post('http://localhost:3000/api/generate-video', {
-      ...formData
-    })
-    console.log(result)
+    try {
+      setLoading(true);
+      setError("")
+      const result = await axios.post('http://localhost:3000/api/generate-video', {
+        ...formData
+      })
+      console.log(result)
+    } catch (error) {
+      setError(error.message)
+      console.log(error.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -37,7 +48,8 @@ function VideoGenerator() {
           <VideoStyle onHandleInputChange={onHandleInputChange} />
           <Voice onHandleInputChange={onHandleInputChange} />
           <button className="bg-black cursor-pointer 
-        text-white px-4 py-2 rounded mt-4" onClick={handleGenerateVideo}>Generate Video</button>
+        text-white px-4 py-2 rounded mt-4" disabled={loading} onClick={handleGenerateVideo}>{loading ?'Generating Video' : 'Generate Video'}</button>
+        {error && <h2>{error}</h2>}
         </div>
         <div className="col-span-1">
           <Preview formData={formData} />

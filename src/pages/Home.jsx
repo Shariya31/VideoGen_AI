@@ -1,8 +1,11 @@
 import React from 'react'
+import GoogleAuth from './GoogleAuth'
 
 const Home = () => {
   return (
-    <div>Wel come to Home</div>
+    <div>
+      <GoogleAuth/>
+    </div>
   )
 }
 

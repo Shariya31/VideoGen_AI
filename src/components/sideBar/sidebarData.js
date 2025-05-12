@@ -18,13 +18,13 @@ export const sidebarLinks = [
       icon: "✅",
       path: "/new-video",
     },
-    {
-      name: "Settings",
-      icon: "⚙️",
-      children: [
-        { name: "Profile", path: "/settings/profile" },
-        { name: "Preferences", path: "/settings/preferences" },
-      ],
-    },
+    // {
+    //   name: "Logout",
+    //   icon: "⚙️",
+    //   // children: [
+    //   //   { name: "Profile", path: "/settings/profile" },
+    //   //   { name: "Preferences", path: "/settings/preferences" },
+    //   // ],
+    // },
   ];
   

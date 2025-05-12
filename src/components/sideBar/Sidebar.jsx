@@ -1,19 +1,32 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { sidebarLinks } from "./sidebarData";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { getAuth, signOut } from "firebase/auth";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const location = useLocation();
-
+  const navigate = useNavigate()
   const toggleSidebar = () => setIsOpen((prev) => !prev);
 
   const handleDropdownToggle = (name) => {
     setOpenDropdown((prev) => (prev === name ? null : name));
   };
+
+  const handleLogout = async () => {
+  try {
+    const auth = getAuth();
+    await signOut(auth);
+    console.log("User signed out successfully");
+    navigate('/')
+  } catch (error) {
+    console.error("Logout error:", error.message);
+    // Handle errors (show toast/notification)
+  }
+};
 
   return (
     <>
@@ -39,6 +52,7 @@ const Sidebar = () => {
             openDropdown={openDropdown}
             handleDropdownToggle={handleDropdownToggle}
           />
+        <button className="mt-4 font-bold mb-6 text-red-800 bg-black rounded-xl p-3" onClick={handleLogout}>Logout</button>
         </motion.div>
       </div>
 
@@ -59,6 +73,7 @@ const Sidebar = () => {
               handleDropdownToggle={handleDropdownToggle}
               onNavigate={() => setIsOpen(false)} // close drawer after clicking
             />
+        <button className="mt-4 font-bold mb-6 text-red-800" onClick={handleLogout}>Logout</button>
           </motion.div>
         )}
       </AnimatePresence>

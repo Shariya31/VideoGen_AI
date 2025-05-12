@@ -48,4 +48,33 @@ router.get('/generated-video', async(req, res)=>{
    }
 })
 
+router.get('/generated-video/:id', async(req, res)=>{
+    try {
+    const { id } = req.params;
+    
+    // Find data by ID
+    const data = await Video.findById(id);
+    
+    if (!data) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'Data not found' 
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      data
+    });
+    
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message
+    });
+  }
+})
+
 export default router

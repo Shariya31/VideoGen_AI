@@ -1,39 +1,77 @@
-// src/services/ideaGenerator.js
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(API_KEY);
+import {
+  GoogleGenAI,
+} from '@google/genai';
 
 export const generateVideoIdeas = async (topic) => {
-  try {
-    // Get the correct model (use 'gemini-1.0-pro' or 'gemini-1.5-pro-latest')
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-pro-latest",  // Updated model name
-      generationConfig: {
-        maxOutputTokens: 1000,
-      }
-    });
+  const ai = new GoogleGenAI({
+    apiKey:import.meta.env.VITE_GEMINI_API_KEY,
+  });
+  const config = {
+    responseMimeType: 'application/json',
+  };
+  const model = 'gemini-2.0-flash';
+  const contents = [
+    {
+      role: 'user',
+      parts: [
+        {
+          text: `Write two different scripts for 30 sec video on Topic : ${topic}
 
-    const prompt = `Generate 3 creative YouTube video ideas about ${topic}. 
-      Format each idea as: "Title: [Title]\nDescription: [1-2 sentences]\nTags: [3-5 tags]"
-      Separate ideas with "---"`;
+Do not add scene description
+Do not add anything in braces. Just return the plain stroy in text
+Give me response in JSON format and follow the schema
+-{
+  scripts: [
+   {
+   content: 
+}
+]
+}`,
+        },
+      ],
+    },
+    {
+      role: 'model',
+      parts: [
+        {
+          text: `\`\`\`json
+{
+  "scripts": [
+    {
+      "content": "Once upon a time, in a cozy little forest, lived a tiny squirrel named Squeaky. Squeaky loved collecting nuts, but he was also very forgetful. One sunny morning, he gathered a huge pile, bigger than himself! He scampered around, burying them everywhere. Later, when winter arrived, Squeaky couldn't remember where he'd hidden his treasure. He searched and searched, his little nose twitching. A friendly bluebird chirped, 'Look up, Squeaky!' And there, in a hollow tree, was his biggest nut stash, sparkling with snow. Squeaky learned that day, even the smallest squirrel needs to remember!"
+    },
+    {
+      "content": "Once there was a little firefly named Flicker who was afraid of the dark. All the other fireflies loved lighting up the night, but Flicker stayed hidden. 'I can't shine!' he'd whisper. One night, a little lost bunny hopped by, scared and alone. Flicker saw her tears and knew he had to help. He took a deep breath and with all his might, flickered! A tiny light, but enough to guide the bunny home. The bunny smiled and Flicker realized that even a small light can make a big difference."
+    }
+  ]
+}
+\`\`\``,
+        },
+      ],
+    },
+    {
+      role: 'user',
+      parts: [
+        {
+          text: `INSERT_INPUT_HERE`,
+        },
+      ],
+    },
+  ];
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-
-    // Parse the response into structured data
-    return text.split("---").map(idea => {
-      const lines = idea.split("\n").filter(line => line.trim() !== "");
-      return {
-        title: lines[0].replace("Title: ", ""),
-        description: lines[1].replace("Description: ", ""),
-        tags: lines[2].replace("Tags: ", "").split(", ")
-      };
-    });
-
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    throw new Error("Failed to generate ideas. Please try again later.");
+  const response = await ai.models.generateContentStream({
+    model,
+    config,
+    contents,
+  });
+  let fullResponse = ''
+  for await (const chunk of response) {
+    fullResponse +=chunk.text
+    // console.log(chunk.text);
   }
-};
+  return fullResponse
+}
+
+
+
+

@@ -7,6 +7,7 @@ import GoogleAuth from '../pages/GoogleAuth'
 import ProtectedRoutes from './ProtectedRoutes'
 import Sidebar from '../components/sideBar/Sidebar'
 import CreateNewVideo from '../pages/CreateNewVideo'
+import VideoPlay from '../pages/VideoPlay'
 const AppRoutes = () => {
   return (
     <div className='grid grid-cols-1 md:grid-cols-5 lg:grid-cols-5'>
@@ -17,10 +18,11 @@ const AppRoutes = () => {
         <div className='col-span-4 p-12'>
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/auth' element={<GoogleAuth />} />
+            {/* <Route path='/auth' element={<GoogleAuth />} /> */}
             <Route path='/dashboard' element={<ProtectedRoutes><Dashboard /></ProtectedRoutes>} />
+            <Route path='/video-play/:id' element={<VideoPlay />} />
             <Route path='/new-video' element={<ProtectedRoutes><CreateNewVideo /></ProtectedRoutes>} />
-            <Route path='*' element={<GoogleAuth />} />
+            {/* <Route path='*' element={<GoogleAuth />} /> */}
           </Routes>
         </div>
       </BrowserRouter>
